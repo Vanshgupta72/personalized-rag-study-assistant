@@ -80,3 +80,14 @@ User Query
 → Context Construction
 → LLM
 → Personalized Answer + Sources
+
+
+## Configuration Management
+
+Application configuration is managed through environment variables using Pydantic Settings.
+
+Sensitive values such as database credentials, JWT secrets, and LLM API keys are stored in `.env`.
+
+The `.env` file is excluded from version control through `.gitignore`.
+
+`.env.example` is maintained as a safe template containing the required configuration variable names.

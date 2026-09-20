@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+python-dotenv
+python-multipart
+pyjwt
+pwdlib[argon2]
+pymupdf
+python-pptx
+sentence-transformers
+chromadb
+httpx
+pytest

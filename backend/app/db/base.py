@@ -1,13 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase
 
 
+# Base class for all SQLAlchemy database models.
 class Base(DeclarativeBase):
-    """
-    Base class for all SQLAlchemy models.
-
-    Every database model in this project will inherit
-    from this class. SQLAlchemy uses this Base to keep
-    track of our database tables and their metadata.
-    """
-
     pass

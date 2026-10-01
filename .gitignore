@@ -1,15 +1,20 @@
 # Virtual environment
 rag_env/
+venv/
+env/
 
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
 
 # Environment variables
 .env
+.env.*
 
 # IDE
 .vscode/
+.idea/
 
 # Logs
 *.log
@@ -20,6 +25,15 @@ __pycache__/
 # Generated files
 *.tmp
 
+# Generated / local data
+data/uploads/*
+data/vector_db/*
+data/processed/*
+data/*.db
+
 # OS files
 .DS_Store
 Thumbs.db
+
+# Sensitive local scripts
+scripts/reset_password.py

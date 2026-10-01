@@ -1,7 +1,12 @@
-# Import the User model so it is available
-# through the models package.
+# Export database models from this package.
 from backend.app.models.user import User
+from backend.app.models.document import Document
+from backend.app.models.conversation import Conversation
+from backend.app.models.message import Message
 
-
-# Define the public objects exposed by this package.
-__all__ = ["User"]
+__all__ = [
+    "User",
+    "Document",
+    "Conversation",
+    "Message",
+]

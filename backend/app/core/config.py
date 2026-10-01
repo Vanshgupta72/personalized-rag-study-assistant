@@ -26,8 +26,18 @@ class Settings(BaseSettings):
     # Local path where the vector database will be stored.
     VECTOR_DB_PATH: str = "./data/vector_db"
 
-    # API key for the future LLM integration.
+    # -----------------------------
+    # LLM configuration
+    # -----------------------------
+
+    # API key used to authenticate with the LLM provider.
     LLM_API_KEY: str = ""
+
+    # API endpoint used for LLM text generation.
+    LLM_API_URL: str = "https://api.openai.com/v1/responses"
+
+    # Model used for generating RAG answers.
+    LLM_MODEL: str = "gpt-5.6-luna"
 
     # Tell Pydantic to load values from .env.
     model_config = SettingsConfigDict(

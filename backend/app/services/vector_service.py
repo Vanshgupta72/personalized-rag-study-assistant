@@ -43,8 +43,8 @@ def add_document_chunks(
     Each chunk receives metadata containing:
     - user_id
     - document_id
-    - subject_id
-    - topic_id
+    - subject_id (if available)
+    - topic_id (if available)
     - chunk_index
     - filename
     """
@@ -61,18 +61,33 @@ def add_document_chunks(
         for index in range(len(chunks))
     ]
 
-    # Store metadata with every chunk.
-    metadatas = [
-        {
+    # -------------------------------------------------
+    # Create metadata
+    # -------------------------------------------------
+
+    metadatas = []
+
+    for index in range(len(chunks)):
+
+        metadata = {
             "user_id": user_id,
             "document_id": document_id,
-            "subject_id": subject_id,
-            "topic_id": topic_id,
             "chunk_index": index,
-            "filename": filename
+            "filename": filename,
         }
-        for index in range(len(chunks))
-    ]
+
+        # ChromaDB does not accept None as a metadata value.
+        if subject_id is not None:
+            metadata["subject_id"] = subject_id
+
+        if topic_id is not None:
+            metadata["topic_id"] = topic_id
+
+        metadatas.append(metadata)
+
+    # -------------------------------------------------
+    # Store chunks in ChromaDB
+    # -------------------------------------------------
 
     document_collection.add(
         ids=chunk_ids,

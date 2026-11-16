@@ -1,0 +1,1180 @@
+/* StudyAI ? Consolidated Design System */
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #17213a;
+  background: #f5f7fc;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --ui-bg: #f5f7fc;
+  --ui-card: #ffffff;
+  --ui-border: #e4e9f3;
+  --ui-ink: #17213a;
+  --ui-muted: #77829a;
+  --ui-accent: #635bdb;
+  --ui-accent-dark: #5047c7;
+  --ui-shadow: 0 7px 26px rgba(23, 33, 58, .045);
+  --ui-shadow-hover: 0 12px 28px rgba(23, 33, 58, .085);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--ui-bg);
+}
+
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+button:disabled { cursor: not-allowed; opacity: .6; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 3px solid rgba(99, 91, 219, .28);
+  outline-offset: 3px;
+}
+img, svg { max-width: 100%; }
+
+/* Dashboard canvas and header */
+body:has(main) {
+  color: var(--ui-ink);
+  background: radial-gradient(ellipse at top left, rgba(224, 231, 255, .48), transparent 42%), var(--ui-bg);
+  -webkit-font-smoothing: antialiased;
+}
+body:has(main) #root > div.min-h-screen {
+  background: radial-gradient(ellipse at 50% -12%, rgba(99, 91, 219, .08), transparent 42%), var(--ui-bg);
+}
+body:has(main) #root header {
+  position: relative;
+  z-index: 2;
+  min-height: 72px;
+  overflow: visible;
+  background: rgba(255, 255, 255, .94);
+  border-bottom: 1px solid var(--ui-border);
+  box-shadow: 0 2px 12px rgba(23, 33, 58, .035);
+  backdrop-filter: blur(16px);
+}
+body:has(main) #root header > div {
+  width: 100%;
+  min-height: 72px;
+  gap: 20px;
+}
+body:has(main) #root header h1 {
+  color: var(--ui-ink);
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.045em;
+}
+body:has(main) #root header h1 + p {
+  margin-top: 4px;
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+body:has(main) #root header button {
+  box-shadow: 0 3px 8px rgba(15, 23, 42, .08);
+}
+
+/* Main page and welcome */
+body:has(main) main {
+  width: 100%;
+  max-width: 1360px;
+  margin-inline: auto;
+  padding: 34px 32px 56px;
+  font-size: 14px;
+}
+body:has(main) main > div:first-child {
+  margin-bottom: 30px;
+  padding: 4px 0 2px;
+}
+body:has(main) main > div:first-child h2 {
+  color: var(--ui-ink);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 800;
+  letter-spacing: -.05em;
+  line-height: 1.18;
+}
+body:has(main) main > div:first-child p {
+  max-width: 680px;
+  margin-top: 9px;
+  color: var(--ui-muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+body:has(main) main p { overflow-wrap: anywhere; }
+
+/* Statistics */
+body:has(main) main > div:nth-child(2) > div {
+  position: relative;
+  min-width: 0;
+  min-height: 122px;
+  padding: 24px;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fff, #fbfbff);
+  box-shadow: 0 5px 20px rgba(23, 33, 58, .035);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+body:has(main) main > div:nth-child(2) > div:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ui-shadow-hover);
+}
+body:has(main) main > div:nth-child(2) > div > p:first-child {
+  color: var(--ui-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+body:has(main) main > div:nth-child(2) > div > p:last-child {
+  margin-top: 12px;
+  color: var(--ui-accent);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+/* Subject, upload and document panels */
+body:has(main) main > div:nth-child(3) { gap: 20px; }
+body:has(main) main > div:nth-child(3) > section,
+body:has(main) main > section:not(:last-child) {
+  min-width: 0;
+  padding: 25px;
+  border: 1px solid var(--ui-border);
+  border-radius: 19px;
+  background: var(--ui-card);
+  box-shadow: var(--ui-shadow);
+}
+body:has(main) main > div:nth-child(3) > section h2,
+body:has(main) main > section:not(:last-child) h2 {
+  color: var(--ui-ink);
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -.035em;
+}
+body:has(main) main > div:nth-child(3) > section h2 + p,
+body:has(main) main > section:not(:last-child) h2 + p {
+  color: var(--ui-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* Inputs and upload control */
+body:has(main) main input:not([type="file"]),
+body:has(main) main select,
+body:has(main) main textarea {
+  min-width: 0;
+  min-height: 44px;
+  max-width: 100%;
+  border-color: #dce3ef;
+  border-radius: 11px;
+  background-color: #fff;
+  color: var(--ui-ink);
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+body:has(main) main input::placeholder,
+body:has(main) main textarea::placeholder { color: #9aa4b7; }
+body:has(main) main input:not([type="file"]):focus,
+body:has(main) main select:focus,
+body:has(main) main textarea:focus {
+  border-color: #8c85ec;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99, 91, 219, .10);
+}
+body:has(main) main input[type="file"] {
+  max-width: 100%;
+  color: #475569;
+  font-size: 14px;
+}
+body:has(main) main input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 9px 13px;
+  border: 1px solid #dbe3f0;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Buttons and list rows */
+body:has(main) main button { border-radius: 10px; font-weight: 600; }
+body:has(main) main button:not(:disabled):hover { transform: translateY(-1px); }
+body:has(main) main button:disabled { transform: none; }
+body:has(main) main > div:nth-child(3) section .space-y-2 > div {
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 14px;
+  border-color: #e7ebf4;
+  border-radius: 12px;
+  background: #fbfcff;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+body:has(main) main > div:nth-child(3) section .space-y-2 > div:hover {
+  border-color: #d8d5fb;
+  background: #fafaff;
+}
+body:has(main) main > section:not(:last-child) .space-y-3 > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid #e5e9f3;
+  border-radius: 13px;
+  background: linear-gradient(120deg, #fff, #fcfcff);
+  box-shadow: 0 2px 7px rgba(23, 33, 58, .025);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+body:has(main) main > section:not(:last-child) .space-y-3 > div:hover {
+  border-color: #c9c5fa;
+  box-shadow: 0 5px 14px rgba(70, 60, 160, .055);
+}
+body:has(main) main > section:not(:last-child) .space-y-3 > div button {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 7px 10px;
+}
+
+/* Chat panel */
+body:has(main) main > section:last-child {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(23, 33, 58, .065);
+}
+body:has(main) main > section:last-child > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 25px;
+  border-bottom: 1px solid var(--ui-border);
+  background: linear-gradient(135deg, #fff, #fafbff);
+}
+body:has(main) main > section:last-child > div:first-child h2 {
+  color: var(--ui-ink);
+  font-size: clamp(19px, 2.4vw, 23px);
+  letter-spacing: -.035em;
+}
+body:has(main) main > section:last-child > div:nth-child(2) {
+  background: radial-gradient(ellipse at 50% 0%, rgba(225, 223, 255, .38), transparent 56%), #f8f9fd;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+body:has(main) main > section:last-child > div:nth-child(2) h3 {
+  color: #1e293b;
+  letter-spacing: -.025em;
+}
+body:has(main) main > section:last-child .text-center.max-w-lg {
+  width: 100%;
+  max-width: 560px;
+  padding: 32px 18px;
+}
+body:has(main) main > section:last-child .text-center.max-w-lg button {
+  width: 100%;
+  min-height: 46px;
+  padding: 13px 16px;
+  border: 1px solid #e1e5f1;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 3px 9px rgba(23, 33, 58, .035);
+  color: #475569;
+  text-align: left;
+  line-height: 1.5;
+}
+body:has(main) main > section:last-child .text-center.max-w-lg button:hover {
+  border-color: #c7c2fa;
+  background: #f7f6ff;
+  box-shadow: 0 5px 14px rgba(99, 91, 219, .09);
+}
+body:has(main) main > section:last-child > div:nth-child(2) .space-y-5 {
+  min-width: 0;
+}
+body:has(main) main > section:last-child > div:nth-child(2) .space-y-5 > div {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+body:has(main) main > section:last-child > div:nth-child(2) .space-y-5 > div > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+body:has(main) main > section:last-child > div:nth-child(2) .space-y-5 > div.justify-start > div {
+  border-radius: 8px 20px 20px 20px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .055);
+}
+body:has(main) main > section:last-child > div:nth-child(2) .space-y-5 > div.justify-end > div {
+  border-radius: 20px 8px 20px 20px;
+  box-shadow: 0 5px 16px rgba(79, 70, 229, .16);
+}
+body:has(main) main > section:last-child .space-y-5 > div.justify-start .border-t {
+  border-color: #e8edf5;
+}
+body:has(main) main > section:last-child .space-y-5 > div.justify-start .border-t .space-y-2 > div {
+  padding: 9px 12px;
+  border: 1px solid #e7ecf5;
+  border-radius: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Chat composer */
+body:has(main) main > section:last-child form {
+  padding: 18px 22px;
+  border-top: 1px solid var(--ui-border);
+  background: #fff;
+}
+body:has(main) main > section:last-child form > div { gap: 12px; }
+body:has(main) main > section:last-child form input,
+body:has(main) main > section:last-child form textarea {
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+body:has(main) main > section:last-child form button {
+  min-width: 76px;
+  min-height: 46px;
+  padding-inline: 20px;
+  border-radius: 11px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body:has(main) main { padding-inline: 20px; }
+}
+@media (max-width: 760px) {
+  body:has(main) #root header > div {
+    min-height: 64px;
+    padding: 12px 16px;
+  }
+  body:has(main) main { padding: 22px 14px 36px; }
+  body:has(main) main > div:nth-child(2) > div { min-height: 100px; padding: 17px; }
+  body:has(main) main > div:nth-child(3) > section,
+  body:has(main) main > section:not(:last-child) { padding: 18px; border-radius: 16px; }
+  body:has(main) main > section:last-child { border-radius: 16px; }
+  body:has(main) main > section:last-child > div:first-child { padding: 16px; }
+  body:has(main) main > section:last-child form { padding: 12px; }
+}
+@media (max-width: 480px) {
+  body:has(main) #root header > div { flex-wrap: wrap; }
+  body:has(main) #root header h1 { font-size: 21px; }
+  body:has(main) main > div:nth-child(2) { gap: 12px; }
+  body:has(main) main > div:nth-child(2) > div { border-radius: 14px; }
+  body:has(main) main > div:nth-child(3) > section { padding: 15px; }
+  body:has(main) main > section:last-child > div:first-child { align-items: flex-start; }
+  body:has(main) main > section:last-child .text-center.max-w-lg { padding: 22px 12px; }
+  body:has(main) main > section:last-child form > div { gap: 8px; }
+  body:has(main) main > section:last-child form input { font-size: 16px; }
+  body:has(main) main > section:last-child form button { min-width: 58px; padding-inline: 14px; }
+  body:has(main) main > section:not(:last-child) .space-y-3 > div { align-items: flex-start; gap: 10px; padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(main) *, body:has(main) *::before, body:has(main) *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* End StudyAI consolidated design system */
+
+/* ==========================================
+   OVERALL MODERN SAAS REDESIGN
+   CSS only — existing app logic untouched
+   ========================================== */
+
+:root {
+  --saas-bg: #f5f7fc;
+  --saas-surface: #ffffff;
+  --saas-text: #172033;
+  --saas-muted: #718096;
+  --saas-border: #e6eaf2;
+  --saas-primary: #635bff;
+  --saas-primary-dark: #5145e5;
+  --saas-radius: 20px;
+  --saas-shadow: 0 8px 30px rgba(31, 41, 75, 0.055);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body:has(main) {
+  color: var(--saas-text);
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(124, 117, 255, 0.09), transparent 32%),
+    radial-gradient(ellipse at 95% 12%, rgba(91, 155, 255, 0.07), transparent 28%),
+    var(--saas-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body:has(main) header {
+  position: relative;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(226, 232, 242, 0.9);
+  box-shadow: 0 3px 18px rgba(30, 41, 75, 0.025);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+body:has(main) main {
+  width: min(100% - 48px, 1240px);
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-top: 38px;
+  padding-bottom: 64px;
+}
+
+/* Welcome / page introduction */
+body:has(main) main > div:first-child {
+  margin-bottom: 30px;
+}
+
+body:has(main) main > div:first-child h1 {
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+}
+
+body:has(main) main > div:first-child p {
+  color: var(--saas-muted);
+  line-height: 1.75;
+}
+
+/* Dashboard statistics */
+body:has(main) main > div:nth-child(2) {
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+body:has(main) main > div:nth-child(2) > div {
+  position: relative;
+  overflow: hidden;
+  min-height: 128px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--saas-border);
+  border-radius: var(--saas-radius);
+  box-shadow: var(--saas-shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+body:has(main) main > div:nth-child(2) > div:hover {
+  transform: translateY(-3px);
+  border-color: #d7d4ff;
+  box-shadow: 0 14px 34px rgba(56, 48, 130, 0.09);
+}
+
+/* Subject and upload panels */
+body:has(main) main > div:nth-child(3) {
+  gap: 22px;
+  margin-bottom: 30px;
+}
+
+body:has(main) main > div:nth-child(3) > section,
+body:has(main) main > section {
+  min-width: 0;
+  padding: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--saas-border);
+  border-radius: var(--saas-radius);
+  box-shadow: var(--saas-shadow);
+}
+
+body:has(main) main > div:nth-child(3) > section h2,
+body:has(main) main > section h2 {
+  letter-spacing: -0.025em;
+}
+
+/* Inputs and selects */
+body:has(main) input:not([type="checkbox"]):not([type="radio"]),
+body:has(main) textarea,
+body:has(main) select {
+  max-width: 100%;
+  border-color: #dfe4ee;
+  border-radius: 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+body:has(main) input:not([type="checkbox"]):not([type="radio"]):focus,
+body:has(main) textarea:focus,
+body:has(main) select:focus {
+  border-color: #918bff;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.11);
+}
+
+/* Buttons */
+body:has(main) main button {
+  transition: transform 160ms ease, box-shadow 160ms ease,
+    background-color 160ms ease, border-color 160ms ease;
+}
+
+body:has(main) main button:focus-visible {
+  outline: 3px solid rgba(99, 91, 255, 0.35);
+  outline-offset: 3px;
+}
+
+body:has(main) main button:active {
+  transform: scale(0.985);
+}
+
+/* Documents panel and list rows */
+body:has(main) main > section:not(:last-child) {
+  margin-bottom: 26px;
+}
+
+body:has(main) main > section:not(:last-child) > div {
+  min-width: 0;
+}
+
+body:has(main) main > section:not(:last-child) > div:has(a),
+body:has(main) main > section:not(:last-child) > div:has(button) {
+  overflow-wrap: anywhere;
+}
+
+/* AI chat workspace */
+body:has(main) main > section:last-child {
+  overflow: hidden;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e2e6f0;
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(31, 41, 75, 0.07);
+}
+
+body:has(main) main > section:last-child > div:first-child {
+  padding: 24px 28px;
+  background: linear-gradient(120deg, #ffffff, #f8f8ff);
+  border-bottom: 1px solid #eceef6;
+}
+
+body:has(main) main > section:last-child .text-center.max-w-lg {
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+body:has(main) main > section:last-child .text-center.max-w-lg h2 {
+  letter-spacing: -0.035em;
+}
+
+body:has(main) main > section:last-child .text-center.max-w-lg button {
+  padding: 15px 17px;
+  border-color: #e6e8f2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(31, 41, 75, 0.025);
+}
+
+body:has(main) main > section:last-child .text-center.max-w-lg button:hover {
+  transform: translateY(-2px);
+  border-color: #c9c5ff;
+  background: #f8f7ff;
+  box-shadow: 0 8px 20px rgba(99, 91, 255, 0.08);
+}
+
+/* Chat composer */
+body:has(main) main > section:last-child form {
+  padding: 20px 24px;
+  background: #ffffff;
+  border-top: 1px solid #eceef5;
+}
+
+body:has(main) main > section:last-child form textarea {
+  min-height: 52px;
+  padding: 14px 16px;
+  background: #fafbff;
+  border-radius: 15px;
+}
+
+/* Subtle scrollbar */
+body:has(main) * {
+  scrollbar-width: thin;
+  scrollbar-color: #d7dbea transparent;
+}
+
+body:has(main) *::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+body:has(main) *::-webkit-scrollbar-thumb {
+  background: #d7dbea;
+  border-radius: 20px;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  body:has(main) main {
+    width: calc(100% - 28px);
+    padding-top: 24px;
+    padding-bottom: 36px;
+  }
+
+  body:has(main) main > div:first-child {
+    margin-bottom: 22px;
+  }
+
+  body:has(main) main > div:nth-child(2) {
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  body:has(main) main > div:nth-child(2) > div {
+    min-height: 108px;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  body:has(main) main > div:nth-child(3) {
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  body:has(main) main > div:nth-child(3) > section,
+  body:has(main) main > section {
+    padding: 19px;
+    border-radius: 17px;
+  }
+
+  body:has(main) main > section:last-child {
+    padding: 0;
+    border-radius: 19px;
+  }
+
+  body:has(main) main > section:last-child > div:first-child {
+    padding: 19px;
+  }
+
+  body:has(main) main > section:last-child form {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  body:has(main) main {
+    width: calc(100% - 20px);
+    padding-top: 18px;
+  }
+
+  body:has(main) main > div:nth-child(2) > div {
+    padding: 14px;
+  }
+
+  body:has(main) main > div:nth-child(3) > section,
+  body:has(main) main > section {
+    padding: 15px;
+  }
+
+  body:has(main) main > section:last-child {
+    padding: 0;
+  }
+
+  body:has(main) main > section:last-child form {
+    padding: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(main) *,
+  body:has(main) *::before,
+  body:has(main) *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* END OVERALL MODERN SAAS REDESIGN */
+
+/* SIDEBAR WORKSPACE REDESIGN */
+.saas-layout {
+  display: grid;
+  grid-template-columns: 238px minmax(0, 1fr);
+  min-height: calc(100vh - 76px);
+  align-items: start;
+}
+
+.saas-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 76px);
+  padding: 28px 16px 22px;
+  background: rgba(255,255,255,.88);
+  border-right: 1px solid #e7eaf2;
+}
+
+.saas-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 10px 28px;
+}
+
+.saas-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+  border-radius: 13px;
+  background: linear-gradient(140deg,#8075ff,#5145e5);
+  box-shadow: 0 6px 15px rgba(99,91,255,.22);
+}
+
+.saas-sidebar-brand strong,
+.saas-sidebar-brand div > span {
+  display: block;
+}
+
+.saas-sidebar-brand strong {
+  color: #202944;
+  font-size: 16px;
+  letter-spacing: -.03em;
+}
+
+.saas-sidebar-brand div > span {
+  margin-top: 3px;
+  color: #8b93a7;
+  font-size: 11px;
+}
+
+.saas-nav-label {
+  padding: 0 11px;
+  margin: 5px 0 10px;
+  color: #969db0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.saas-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.saas-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 11px 12px;
+  color: #65708a;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: background .16s ease,color .16s ease,border-color .16s ease;
+}
+
+.saas-nav-link > span {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  font-size: 18px;
+}
+
+.saas-nav-link:hover,
+.saas-nav-link:focus-visible {
+  color: #5145e5;
+  background: #f0efff;
+  border-color: #e5e2ff;
+  outline: none;
+}
+
+.saas-sidebar-note {
+  margin-top: auto;
+  padding: 16px 14px;
+  background: linear-gradient(145deg,#f2f1ff,#f8f8ff);
+  border: 1px solid #e8e5ff;
+  border-radius: 15px;
+}
+
+.saas-note-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 12px;
+  color: #5b50e8;
+  background: white;
+  border-radius: 10px;
+}
+
+.saas-sidebar-note strong {
+  display: block;
+  color: #30345a;
+  font-size: 12px;
+}
+
+.saas-sidebar-note p {
+  margin-top: 6px;
+  color: #777e99;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.saas-content {
+  min-width: 0;
+}
+
+.saas-content > main {
+  width: min(100% - 36px,1160px);
+  max-width: 1160px;
+  padding-top: 34px;
+}
+
+.saas-content #dashboard,
+.saas-content #subjects,
+.saas-content #documents,
+.saas-content #ai-chat {
+  scroll-margin-top: 24px;
+}
+
+@media (max-width: 1024px) {
+  .saas-layout {
+    grid-template-columns: 205px minmax(0,1fr);
+  }
+
+  .saas-sidebar {
+    padding-inline: 12px;
+  }
+
+  .saas-content > main {
+    width: calc(100% - 24px);
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .saas-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .saas-sidebar {
+    position: relative;
+    min-height: 0;
+    width: 100%;
+    padding: 14px 16px;
+    border-right: 0;
+    border-bottom: 1px solid #e7eaf2;
+  }
+
+  .saas-sidebar-brand {
+    padding: 0 4px 13px;
+  }
+
+  .saas-nav-label,
+  .saas-sidebar-note {
+    display: none;
+  }
+
+  .saas-nav {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .saas-nav-link {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 9px 11px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .saas-nav-link > span {
+    width: auto;
+    font-size: 15px;
+  }
+
+  .saas-content {
+    width: 100%;
+  }
+
+  .saas-content > main {
+    width: calc(100% - 24px);
+    padding-top: 22px;
+  }
+}
+/* END SIDEBAR WORKSPACE REDESIGN */
+
+/* CONSISTENT SIDEBAR SVG ICONS */
+.saas-brand-mark svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.saas-nav-link > span svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.saas-note-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+/* Stable SVG feature icons */
+.ui-feature-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+
+/* ===== STUDYAI DARK THEME ===== */
+html, body, #root {
+  background: #0b1120 !important;
+  color: #e5e7eb;
+}
+
+body {
+  background: #0b1120 !important;
+}
+
+.saas-layout {
+  background: #0b1120 !important;
+}
+
+.saas-sidebar {
+  background: #111827 !important;
+  border-color: #263244 !important;
+  color: #e5e7eb !important;
+}
+
+.saas-content,
+.saas-content main {
+  background: #0b1120 !important;
+  color: #e5e7eb !important;
+}
+
+.saas-sidebar-brand,
+.saas-sidebar-brand strong,
+.saas-sidebar-brand span,
+.saas-nav-label,
+.saas-nav-link {
+  color: #e5e7eb;
+}
+
+.saas-nav-link:hover,
+.saas-nav-link:focus {
+  background: #1e293b !important;
+}
+
+.saas-sidebar-note,
+.saas-content .bg-white,
+.saas-content [class*="bg-slate-50"],
+.saas-content [class*="bg-gray-50"] {
+  background: #111827 !important;
+  border-color: #263244 !important;
+  color: #e5e7eb !important;
+}
+
+.saas-content h1,
+.saas-content h2,
+.saas-content h3,
+.saas-content p,
+.saas-content label {
+  color: inherit;
+}
+
+.saas-content input,
+.saas-content textarea,
+.saas-content select {
+  background: #111827 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+.saas-content input::placeholder,
+.saas-content textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+.saas-content button {
+  border-color: #374151;
+}
+
+.saas-content button[class*="bg-blue"],
+.saas-content button[class*="bg-indigo"] {
+  color: #ffffff !important;
+}
+
+.saas-content .border,
+.saas-content [class*="border-slate"],
+.saas-content [class*="border-gray"] {
+  border-color: #263244 !important;
+}
+
+/* ===== FIX REMAINING LIGHT SECTIONS ===== */
+.saas-layout,
+.saas-content,
+.saas-content main,
+.saas-content section,
+.saas-content article,
+.saas-content .card,
+.saas-content [class~="bg-white"],
+.saas-content [class*="bg-gray-50"],
+.saas-content [class*="bg-gray-100"],
+.saas-content [class*="bg-slate-50"],
+.saas-content [class*="bg-slate-100"],
+.saas-content [class*="bg-zinc-50"],
+.saas-content [class*="bg-neutral-50"] {
+  background-color: #0b1120 !important;
+  color: #e5e7eb !important;
+}
+
+.saas-content [class*="rounded"] {
+  border-color: #263244;
+}
+
+.saas-content .text-black,
+.saas-content [class*="text-slate-900"],
+.saas-content [class*="text-gray-900"],
+.saas-content [class*="text-slate-800"],
+.saas-content [class*="text-gray-800"] {
+  color: #e5e7eb !important;
+}
+
+/* ===== FINAL DARK THEME OVERRIDES ===== */
+html, body, #root,
+.saas-layout,
+.saas-content,
+.saas-content main {
+  background: #0b1120 !important;
+  color: #e5e7eb !important;
+}
+
+.saas-content header,
+.saas-content section,
+.saas-content article,
+.saas-content .bg-white,
+.saas-content [class~="bg-white"],
+.saas-content [class*="bg-slate-50"],
+.saas-content [class*="bg-gray-50"] {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #263244 !important;
+}
+
+.saas-content h1,
+.saas-content h2,
+.saas-content h3,
+.saas-content p,
+.saas-content label,
+.saas-content strong {
+  color: #e5e7eb;
+}
+
+.saas-content input,
+.saas-content textarea,
+.saas-content select {
+  background-color: #0b1120 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+.saas-content input::placeholder,
+.saas-content textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+.saas-content button[class*="bg-indigo"],
+.saas-content button[class*="bg-blue"] {
+  background-color: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+.saas-sidebar {
+  background: #111827 !important;
+  border-color: #263244 !important;
+}
+
+
+/* ===== TARGETED FIX: HEADER, DOCUMENT ROWS, CHAT ===== */
+body:has(main) #root header,
+body:has(main) #root header > div {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #263244 !important;
+  box-shadow: none !important;
+}
+
+body:has(main) #root header h1,
+body:has(main) #root header p,
+body:has(main) #root header span {
+  color: #e5e7eb !important;
+}
+
+body:has(main) main > section:not(:last-child) .space-y-3 > div,
+body:has(main) main > div:nth-child(3) section .space-y-2 > div {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #263244 !important;
+}
+
+body:has(main) main > section:last-child,
+body:has(main) main > section:last-child > div:first-child,
+body:has(main) main > section:last-child > div:nth-child(2),
+body:has(main) main > section:last-child form {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #263244 !important;
+}
+
+body:has(main) main > section:last-child .text-center.max-w-lg button {
+  background: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-color: #374151 !important;
+}
+
+body:has(main) main input:not([type="file"]),
+body:has(main) main select,
+body:has(main) main textarea {
+  background: #0b1120 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+body:has(main) main input[type="file"]::file-selector-button {
+  background: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-color: #374151 !important;
+}
+

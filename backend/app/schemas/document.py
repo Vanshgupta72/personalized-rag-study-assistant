@@ -29,6 +29,7 @@ class DocumentListResponse(BaseModel):
     subject_id: int | None
     topic_id: int | None
     uploaded_at: datetime
+    chunk_count: int | None = None
 
     model_config = {
         "from_attributes": True

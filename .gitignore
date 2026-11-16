@@ -37,3 +37,60 @@ Thumbs.db
 
 # Sensitive local scripts
 scripts/reset_password.py
+# Node dependencies and build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Python backups and temporary versions
+*.bak
+*.backup
+*.pre_*_backup
+*_backup_*.py
+*_before_*.py
+*.pyc
+
+# Database backups
+*.dump
+database_backup_*.json
+
+# Large training archives
+*.zip
+
+# Local diagnostics and temporary reports
+chat_timeout_diagnostics.txt
+rag_debug_bundle.txt
+rag_pipeline_diagnostics.txt
+
+# User-uploaded documents and local vector database
+data/uploads/
+data/vector_db/
+
+# Local database and runtime artifacts
+*.sqlite
+*.sqlite3
+*.db
+
+# Historical frontend backups
+frontend/src/*_backup*
+frontend/src/*_before_*
+
+# Historical backend backups
+backend/**/*_before_*
+backend/**/*_backup*
+backend/**/*.pre_*
+backend/**/*.pycode
+
+# Local project audit artifacts
+PERSONALIZATION_PROJECT_AUDIT.txt
+PRE_V4_INTEGRATION_AUDIT.txt
+PROJECT_INSPECTION.txt
+V4_INTEGRATION_READINESS.txt
+reports/
+
+# Local datasets and model files
+/data/
+/models/
+
+# Local audit scripts
+/tools/

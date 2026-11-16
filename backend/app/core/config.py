@@ -1,4 +1,4 @@
-# Pydantic Settings automatically reads configuration
+﻿# Pydantic Settings automatically reads configuration
 # values from the .env file.
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -38,6 +38,13 @@ class Settings(BaseSettings):
 
     # Model used for generating RAG answers.
     LLM_MODEL: str = "gpt-5.6-luna"
+
+    # -----------------------------
+    # Local Ollama configuration
+    # -----------------------------
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "qwen2.5:1.5b-instruct"
+    OLLAMA_TIMEOUT: float = 180.0
 
     # Tell Pydantic to load values from .env.
     model_config = SettingsConfigDict(

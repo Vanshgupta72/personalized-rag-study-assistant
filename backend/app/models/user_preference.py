@@ -1,6 +1,8 @@
-from datetime import datetime
+﻿from datetime import datetime
+from typing import Any
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String, Boolean
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.db.base import Base
@@ -30,6 +32,20 @@ class UserPreference(Base):
     explanation_style: Mapped[str] = mapped_column(
         String(50),
         default="simple",
+        nullable=False
+    )
+
+    # Onboarding questionnaire ke answers store karne ke liye.
+    learning_profile: Mapped[dict[str, Any]] = mapped_column(
+        JSONB,
+        default=dict,
+        nullable=False
+    )
+
+    # User ne onboarding complete ki hai ya nahi.
+    onboarding_completed: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
         nullable=False
     )
 

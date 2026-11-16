@@ -180,7 +180,8 @@ def upload_document(
 
     try:
 
-        process_document(
+        # Process the document and capture its indexed chunk count.
+        chunk_count = process_document(
             document_id=document.id,
             user_id=current_user.id,
             stored_filename=document.stored_filename,
@@ -189,26 +190,60 @@ def upload_document(
             topic_id=document.topic_id,
         )
 
+        # Persist the successfully indexed chunk count.
+        document.chunk_count = chunk_count
+        db.commit()
+        db.refresh(document)
+
     except Exception as error:
 
-        # Remove PostgreSQL record.
-        db.delete(document)
-        db.commit()
+        # Roll back any failed PostgreSQL transaction.
+        db.rollback()
 
-        # Remove physical file.
+        # Remove partially stored ChromaDB chunks.
+        try:
+            delete_document_chunks(document_id=document.id)
+        except Exception as cleanup_error:
+            print(
+                "[DOCUMENT CLEANUP WARNING] "
+                f"ChromaDB cleanup failed for document "
+                f"{document.id}: {cleanup_error}"
+            )
+
+        # Remove the PostgreSQL document record.
+        try:
+            db.query(Document).filter(
+                Document.id == document.id,
+                Document.user_id == current_user.id,
+            ).delete(synchronize_session=False)
+            db.commit()
+        except Exception as cleanup_error:
+            db.rollback()
+            print(
+                "[DOCUMENT CLEANUP WARNING] "
+                f"Database cleanup failed for document "
+                f"{document.id}: {cleanup_error}"
+            )
+
+        # Remove the uploaded physical file.
         file_path = (
             Path("data/uploads")
             / stored_filename
         )
 
-        if file_path.exists():
-            file_path.unlink()
+        try:
+            if file_path.exists():
+                file_path.unlink()
+        except OSError as cleanup_error:
+            print(
+                "[DOCUMENT CLEANUP WARNING] "
+                f"File cleanup failed for {stored_filename}: "
+                f"{cleanup_error}"
+            )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=(
-                f"Document processing failed: {str(error)}"
-            ),
+            detail=f"Document processing failed: {str(error)}",
         )
 
     return document

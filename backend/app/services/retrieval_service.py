@@ -4,6 +4,10 @@ from backend.app.services.embedding_service import generate_embedding
 from backend.app.services.vector_service import document_collection
 
 
+# Provisional relevance cutoff calibrated against current sample queries.
+MAX_L2_DISTANCE = 1.2
+
+
 def search_documents(
     query: str,
     user_id: int,
@@ -86,6 +90,8 @@ def search_documents(
         metadatas,
         distances
     ):
+        if distance > MAX_L2_DISTANCE:
+            continue
         retrieved_chunks.append(
             {
                 "text": document,

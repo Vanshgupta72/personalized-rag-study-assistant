@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.db.base import Base
@@ -64,6 +64,13 @@ class Document(Base):
     file_type: Mapped[str] = mapped_column(
         String(20),
         nullable=False
+    )
+
+    # Number of text chunks successfully indexed in ChromaDB.
+    chunk_count: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+        default=None,
     )
 
     # Time when the document was uploaded.

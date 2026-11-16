@@ -64,8 +64,58 @@ def delete_subject(
     subject: Subject
 ) -> None:
     """
-    Delete a subject.
+    Delete a subject while preserving document metadata and learning history.
     """
 
-    db.delete(subject)
-    db.commit()
+    from backend.app.models.document import Document
+    from backend.app.models.learning_history import LearningHistory
+    from backend.app.models.topic import Topic
+
+    try:
+        # Find topics belonging to this subject.
+        topics = (
+            db.query(Topic)
+            .filter(Topic.subject_id == subject.id)
+            .all()
+        )
+        topic_ids = [topic.id for topic in topics]
+
+        # Preserve documents by clearing their subject reference.
+        db.query(Document).filter(
+            Document.subject_id == subject.id
+        ).update(
+            {Document.subject_id: None},
+            synchronize_session=False
+        )
+
+        if topic_ids:
+            # Unlink documents from the topics being deleted.
+            db.query(Document).filter(
+                Document.topic_id.in_(topic_ids)
+            ).update(
+                {Document.topic_id: None},
+                synchronize_session=False
+            )
+
+            # Keep learning-history records, but unlink deleted topics.
+            db.query(LearningHistory).filter(
+                LearningHistory.topic_id.in_(topic_ids)
+            ).update(
+                {LearningHistory.topic_id: None},
+                synchronize_session=False
+            )
+
+            # Delete the now-unreferenced topics.
+            for topic in topics:
+                db.delete(topic)
+
+            # Force topic DELETE statements to run before subject DELETE.
+            db.flush()
+
+        # Delete the subject after its references are cleared.
+        db.delete(subject)
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        raise

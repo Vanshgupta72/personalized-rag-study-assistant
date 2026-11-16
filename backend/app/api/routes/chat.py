@@ -1,18 +1,21 @@
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from backend.app.db.database import get_db
+from backend.app.models.conversation import Conversation
 from backend.app.models.user import User
+from backend.app.models.subject import Subject
+from backend.app.models.topic import Topic
+from backend.app.services.learning_history_service import (
+    create_learning_activity,
+)
 from backend.app.schemas.chat import ChatRequest, ChatResponse
-
 from backend.app.services.auth_dependency import get_current_user
 from backend.app.services.conversation_service import (
     add_message,
     create_conversation,
     get_conversation_messages,
-)
-from backend.app.services.learning_history_service import (
-    create_learning_activity,
 )
 from backend.app.services.rag_service import answer_question
 
@@ -24,22 +27,24 @@ router = APIRouter(
 
 
 @router.post(
-    "",
+    "/ask",
     response_model=ChatResponse,
 )
-def chat(
+def ask_question(
     request: ChatRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # ---------------------------------------------------------
-    # SUBJECT VALIDATION
-    # ---------------------------------------------------------
+    """
+    Ask a question using the authenticated user's
+    personalized study materials.
 
+    Existing conversation history is loaded and passed
+    to the RAG service for follow-up questions.
+    """
+
+    # Validate subject ownership before processing the question.
     if request.subject_id is not None:
-
-        from backend.app.models.subject import Subject
-
         subject = (
             db.query(Subject)
             .filter(
@@ -48,106 +53,83 @@ def chat(
             )
             .first()
         )
+        if subject is None:
+            raise HTTPException(status_code=404, detail="Subject not found.")
 
-        if not subject:
-            raise HTTPException(
-                status_code=404,
-                detail="Subject not found.",
-            )
-
-    # ---------------------------------------------------------
-    # TOPIC VALIDATION
-    # ---------------------------------------------------------
-
+    # A selected topic must belong to the selected subject.
     if request.topic_id is not None:
-
-        from backend.app.models.topic import Topic
-
+        if request.subject_id is None:
+            raise HTTPException(
+                status_code=400,
+                detail="A subject must be selected with a topic.",
+            )
         topic = (
             db.query(Topic)
             .filter(
                 Topic.id == request.topic_id,
+                Topic.subject_id == request.subject_id,
             )
             .first()
         )
-
-        if not topic:
+        if topic is None:
             raise HTTPException(
                 status_code=404,
-                detail="Topic not found.",
+                detail="Topic not found for this subject.",
             )
 
-        if topic.subject_id != request.subject_id:
-            raise HTTPException(
-                status_code=400,
-                detail="Topic does not belong to the selected subject.",
-            )
+    # 1. Find an existing conversation or create a new one.
+    if request.conversation_id is not None:
 
-        from backend.app.models.subject import Subject
-
-        topic_subject = (
-            db.query(Subject)
+        conversation = (
+            db.query(Conversation)
             .filter(
-                Subject.id == topic.subject_id,
-                Subject.user_id == current_user.id,
+                Conversation.id == request.conversation_id,
+                Conversation.user_id == current_user.id,
             )
             .first()
         )
 
-        if not topic_subject:
-            raise HTTPException(
-                status_code=404,
-                detail="Topic not found.",
-            )
-
-    # ---------------------------------------------------------
-    # CONVERSATION
-    # ---------------------------------------------------------
-
-    conversation_id = request.conversation_id
-
-    if conversation_id is not None:
-
-        try:
-            conversation_history = get_conversation_messages(
-                db=db,
-                conversation_id=conversation_id,
-                user_id=current_user.id,
-            )
-
-        except ValueError:
+        if conversation is None:
             raise HTTPException(
                 status_code=404,
                 detail="Conversation not found.",
             )
 
+        previous_messages = get_conversation_messages(
+            db=db,
+            conversation_id=conversation.id,
+            user_id=current_user.id,
+        )
+
+        # The conversation service returns dictionaries.
+        conversation_history = [
+            {
+                "role": message["role"],
+                "content": message["content"],
+            }
+            for message in previous_messages
+        ]
+
     else:
+        title = request.question.strip()[:60]
 
         conversation = create_conversation(
             db=db,
             user_id=current_user.id,
-            title=request.question[:80],
+            title=title,
         )
-
-        conversation_id = conversation.id
 
         conversation_history = []
 
-    # ---------------------------------------------------------
-    # SAVE USER MESSAGE
-    # ---------------------------------------------------------
-
+    # 2. Save the current user's question.
     add_message(
         db=db,
-        conversation_id=conversation_id,
+        conversation_id=conversation.id,
         role="user",
         content=request.question,
     )
 
-    # ---------------------------------------------------------
-    # RAG + PERSONALIZATION
-    # ---------------------------------------------------------
-
+    # 3. Run personalized RAG.
     result = answer_question(
         db=db,
         user_id=current_user.id,
@@ -158,37 +140,27 @@ def chat(
         conversation_history=conversation_history,
     )
 
-    answer = result["answer"]
-    sources = result["sources"]
-
-    # ---------------------------------------------------------
-    # SAVE ASSISTANT MESSAGE
-    # ---------------------------------------------------------
-
+    # 4. Save the assistant's answer.
     add_message(
         db=db,
-        conversation_id=conversation_id,
+        conversation_id=conversation.id,
         role="assistant",
-        content=answer,
+        content=result["answer"],
     )
 
-    # ---------------------------------------------------------
-    # LEARNING HISTORY
-    # ---------------------------------------------------------
+    # Record a question linked to the selected topic.
+    if request.topic_id is not None:
+        create_learning_activity(
+            db=db,
+            user_id=current_user.id,
+            topic_id=request.topic_id,
+            activity_type="question_asked",
+        )
 
-    create_learning_activity(
-        db=db,
-        user_id=current_user.id,
-        topic_id=request.topic_id,
-        activity_type="question_answered",
-    )
-
-    # ---------------------------------------------------------
-    # RESPONSE
-    # ---------------------------------------------------------
-
+    # 5. Return the response.
     return {
-        "conversation_id": conversation_id,
-        "answer": answer,
-        "sources": sources,
+        "conversation_id": conversation.id,
+        "answer": result["answer"],
+        "sources": result["sources"],
     }
+

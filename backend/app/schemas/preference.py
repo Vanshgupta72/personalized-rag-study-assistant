@@ -1,23 +1,26 @@
-from pydantic import BaseModel
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PreferenceUpdate(BaseModel):
-    """
-    Data received when a user updates their study preferences.
-    """
+    """Study preferences aur onboarding answers."""
 
-    preferred_language: str
-    explanation_style: str
+    preferred_language: str | None = None
+    explanation_style: str | None = None
+    learning_profile: dict[str, Any] | None = None
+    onboarding_completed: bool | None = None
 
 
 class PreferenceResponse(BaseModel):
-    """
-    Data returned when the user's study preferences are requested.
-    """
+    """User ki saved study preferences."""
 
     id: int
     user_id: int
     preferred_language: str
     explanation_style: str
+    learning_profile: dict[str, Any] = Field(default_factory=dict)
+    onboarding_completed: bool = False
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
+
